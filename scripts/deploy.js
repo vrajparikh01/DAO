@@ -1,4 +1,5 @@
 const { ethers } = require("hardhat");
+const { keccak256 } = require("ethers/lib/utils");
 
 async function main() {
   let deployer = await ethers.getSigner();
@@ -24,16 +25,47 @@ async function main() {
   const VOTING_PERIOD = 5; // 5 blocks
   const VOTING_DELAY = 1; // 1 block
   const QUORUM_PERCENTAGE = 4; // 4%
+
+  // const Governor = await ethers.getContractFactory("GovernorContract");
+  // const governor = await Governor.deploy(
+  //   governaceToken.address,
+  //   timelock.address,
+  //   VOTING_PERIOD,
+  //   VOTING_DELAY,
+  //   QUORUM_PERCENTAGE,
+  //   { gasLimit: 30000000 }
+  // );
+  // await governor.deployed();
+  // console.log("Governor deployed to:", governor.address);
+
+  // deploy with bytecode and abi bcoz contract size exceeds 24kb
   const Governor = await ethers.getContractFactory("GovernorContract");
-  const governor = await Governor.deploy(
+  const bytecode = Governor.bytecode;
+  const abi = Governor.interface;
+  const signer = await ethers.getSigner();
+
+  const constructorArgs = [
     governaceToken.address,
     timelock.address,
     VOTING_PERIOD,
     VOTING_DELAY,
     QUORUM_PERCENTAGE,
-    { gasLimit: 30000000 }
+  ];
+  const encodeArgs = ethers.utils.defaultAbiCoder.encode(
+    ["address", "address", "uint256", "uint256", "uint256"],
+    constructorArgs
   );
-  await governor.deployed();
+  const bytecodeWithArgs = bytecode + encodeArgs.slice(2);
+
+  const salt = "0x" + "00".repeat(32);
+  const bytecodeHash = keccak256(bytecodeWithArgs);
+  const contractAddress = ethers.utils.getCreate2Address(
+    signer.address,
+    salt,
+    bytecodeHash
+  );
+
+  const governor = new ethers.Contract(contractAddress, abi, signer);
   console.log("Governor deployed to:", governor.address);
 
   // setting up the roles
