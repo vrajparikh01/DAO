@@ -16,6 +16,7 @@
     "@openzeppelin/hardhat-upgrades": "^1.22.1",
     "chai": "^4.3.7",
     "dotenv": "^16.0.3",
+    "fs": "^0.0.1-security",
     "hardhat": "^2.13.0",
     "hardhat-abi-exporter": "^2.10.1",
     "hardhat-contract-sizer": "^2.8.0",

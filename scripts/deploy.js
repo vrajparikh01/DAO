@@ -1,5 +1,12 @@
 const { ethers } = require("hardhat");
 const { keccak256 } = require("ethers/lib/utils");
+const {
+  MIN_DELAY,
+  VOTING_PERIOD,
+  VOTING_DELAY,
+  QUORUM_PERCENTAGE,
+  ADDRESS_ZERO,
+} = require("../helper-hardhat.config");
 
 async function main() {
   let deployer = await ethers.getSigner();
@@ -15,16 +22,12 @@ async function main() {
   console.log("Delegated!");
 
   // deploy Timelock contract
-  const MIN_DELAY = 3600;
   const TimeLock = await ethers.getContractFactory("TimeLock");
   const timelock = await TimeLock.deploy(MIN_DELAY, [], [], deployer.address);
   await timelock.deployed();
   console.log("Timelock deployed to:", timelock.address);
 
   // deploy Governor contract
-  const VOTING_PERIOD = 5; // 5 blocks
-  const VOTING_DELAY = 1; // 1 block
-  const QUORUM_PERCENTAGE = 4; // 4%
 
   // const Governor = await ethers.getContractFactory("GovernorContract");
   // const governor = await Governor.deploy(
@@ -72,7 +75,6 @@ async function main() {
   const proposerRole = await timelock.PROPOSER_ROLE();
   const executorRole = await timelock.EXECUTOR_ROLE();
   const adminRole = await timelock.TIMELOCK_ADMIN_ROLE();
-  const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 
   // only the governor can propose
   const proposerTx = await timelock.grantRole(proposerRole, governor.address);
