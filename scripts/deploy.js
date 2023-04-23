@@ -71,7 +71,7 @@ async function main() {
   const governor = new ethers.Contract(contractAddress, abi, signer);
   console.log("Governor deployed to:", governor.address);
 
-  // setting up the roles
+  // setting up the roles (AccessControl)
   const proposerRole = await timelock.PROPOSER_ROLE();
   const executorRole = await timelock.EXECUTOR_ROLE();
   const adminRole = await timelock.TIMELOCK_ADMIN_ROLE();
