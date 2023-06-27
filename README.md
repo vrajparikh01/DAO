@@ -1,13 +1,22 @@
-# Sample Hardhat Project
+# Basic Information 
+I have created a sample DAO contract.
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+DAO: Decentralized Autonomous Organization. People associated with DAO are responsible for voting on changes and propose new idea to make the app better. 
 
-Try running some of the following tasks:
+## Quick start
+Clone the repository and install all the packages
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
-```
+``` git clone https://github.com/vrajparikh01/DAO ```
+
+``` npm install ```
+
+## Deployment
+To deploy all the contracts , run the following command
+
+``` npx hardhat run scripts/deploy.js ```
+
+## Tests
+To test the conttracts and see if the user is eligible for airdrop or not
+
+``` npx hardhat test test/test.js ```
+
